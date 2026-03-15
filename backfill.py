@@ -20,7 +20,7 @@ def backfill(start: date, end: date):
 
     while current <= end:
         result = subprocess.run(
-            ["python", "extract/generate_daily_data.py", current.strftime("%Y-%m-%d")],
+            ["python3", "extract/generate_daily_data.py", current.strftime("%Y-%m-%d")],
             capture_output=True, text=True
         )
         if result.returncode == 0:
