@@ -17,7 +17,7 @@ import os
 from datetime import datetime, date
 
 # ── 설정 ──────────────────────────────────────────────
-OUTPUT_PATH = "data/sample/orders.csv"
+OUTPUT_PATH = os.environ.get("OUTPUT_PATH", "data/sample/orders.csv")
 DAILY_ORDER_COUNT = 200          # 하루 주문 수 (±50 랜덤)
 RANDOM_SEED_BASE  = 42           # 날짜별로 seed 고정 → 같은 날 실행해도 동일 결과
 

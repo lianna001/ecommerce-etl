@@ -40,7 +40,7 @@ if __name__ == "__main__":
         start = date.fromisoformat(sys.argv[1])
         end   = date.fromisoformat(sys.argv[2])
     else:
-        start = date(2025, 3, 1)
+        start = date(2026, 3, 1)
         end   = date.today()
 
     print(f"백필 시작: {start} ~ {end}\n")
