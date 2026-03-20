@@ -1,0 +1,66 @@
+-- organic vs ad sales wtd wow
+with daily as (
+    select 
+        date_trunc('week', dateadd(day, 1, order_date)) - interval '1 day' as week_start,
+        dayofweek(order_date) as day_num,
+        sum(case when ad_channel = 'Organic' then amount else 0 end) as sales_organic,
+        sum(case when ad_channel != 'Organic' then amount else 0 end) as sales_ad,
+        sum(amount) as total_sales
+    from SNOWFLAKE_LEARNING_DB.PUBLIC.ECOMMERCE_ORDERS
+    group by 1, 2
+),
+weekly_stats as (
+    select 
+        week_start,
+        sum(sales_organic) as org_full,
+        sum(sales_ad) as ad_full,
+        sum(total_sales) as total_full,
+        sum(case when day_num <= dayofweek(current_date) then total_sales else 0 end) as total_wtd_limit
+    from daily
+    group by 1
+)
+select 
+    week_start,
+    org_full as "Organic Sales",
+    ad_full as "Ad Sales",
+    total_full as "Total Sales",
+    round((total_full - lag(total_full) over (order by week_start)) / nullif(lag(total_full) over (order by week_start), 0) * 100, 2) as "WoW %",
+    round((total_wtd_limit - lag(total_wtd_limit) over (order by week_start)) / nullif(lag(total_wtd_limit) over (order by week_start), 0) * 100, 2) as "WTD WoW %"
+from weekly_stats
+order by 1;
+
+
+
+--sales by category wtd wow
+
+with daily as (
+    select 
+        date_trunc('week', dateadd(day, 1, order_date)) - interval '1 day' as week_start,
+        dayofweek(order_date) as day_num,
+        category,
+        sum(case when ad_channel != 'Organic' then amount else 0 end) as daily_ad_sales,
+        sum(amount) as daily_total_sales
+    from SNOWFLAKE_LEARNING_DB.PUBLIC.ECOMMERCE_ORDERS
+    group by 1, 2, 3
+),
+weekly_stats as (
+    select 
+        week_start,
+        category,
+        sum(daily_ad_sales) as ad_sales,
+        sum(daily_total_sales) as total_full,
+        sum(case when day_num <= dayofweek(current_date) then daily_total_sales else 0 end) as total_wtd_limit
+    from daily
+    group by 1, 2
+)
+select 
+    week_start,
+    category,
+    total_full as "Total Sales",
+    ad_sales,
+    round((total_full - lag(total_full) over (partition by category order by week_start)) 
+        / nullif(lag(total_full) over (partition by category order by week_start), 0) * 100, 2) as "WoW %",
+    round((total_wtd_limit - lag(total_wtd_limit) over (partition by category order by week_start)) 
+        / nullif(lag(total_wtd_limit) over (partition by category order by week_start), 0) * 100, 2) as "WTD WoW %"
+from weekly_stats
+order by 1, 2;
