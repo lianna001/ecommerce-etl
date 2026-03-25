@@ -7,7 +7,7 @@
 
 ## Project Highlights
 - **End-to-end ETL pipeline** — custom Python data generation with realistic e-commerce patterns, Airflow-orchestrated daily loads into Snowflake
-- **Interactive [Tableau Dashboard](https://public.tableau.com/views/ecommerce_dashboard_17739708179770/Dashboard12?:language=en&:display_count=n&:origin=viz_share_link)** — tracks ad vs. organic sales, week-over-week(WoW) trends, and category-level performance — tracks ad vs. organic sales, week-over-week(WoW) trends, and category-level performance
+- **Interactive [Tableau Dashboard](https://public.tableau.com/views/ecommerce_dashboard_17739708179770/Dashboard12?:language=en&:display_count=n&:origin=viz_share_link)** — tracks ad vs. organic sales, week-over-week(WoW) trends, and category-level performance
 
 ---
 
@@ -32,8 +32,12 @@
   - Which ad channels perform best?
   - Which promotions (FREESHIP vs. DISCOUNT10) drive more sales?
   - How are sales trending week-over-week, overall and by category?
+- LLM integrated for data insights interpretation (working in progress as of 3/25)
+
+### AI Agent
+- Daily e-commerce news & data insights auto updates via email/Notion (working in progress as of 3/25)
 
 ---
 
 ## Tech Stack
-`Python` `SQL` `Apache Airflow` `Snowflake` `Tableau` `Docker` `GitHub`
+`Python` `SQL` `Apache Airflow` `Snowflake` `Tableau` `Docker` `GitHub` `OpenAI` `API` `Notion`
