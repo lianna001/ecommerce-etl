@@ -1,4 +1,4 @@
 data/sample/*.csv
 __pycache__/
 *.pyc
-.env
+.env.DS_Store
