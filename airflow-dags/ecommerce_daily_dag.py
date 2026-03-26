@@ -30,7 +30,12 @@ with DAG(
 
     generate_data = BashOperator(
         task_id="generate_daily_data",
-        bash_command="TZ=America/Los_Angeles OUTPUT_PATH=/opt/airflow/ecommerce-etl/data/sample/orders.csv python3 /opt/airflow/ecommerce-etl/extract/generate_daily_data.py",
+        bash_command=(
+    "TZ=America/Los_Angeles "
+    "OUTPUT_PATH=/opt/airflow/ecommerce-etl/data/sample/orders.csv "
+    "python3 /opt/airflow/ecommerce-etl/extract/generate_daily_data.py "
+    "{{ ds }}"
+)
     )
 
     load_data = PythonOperator(
