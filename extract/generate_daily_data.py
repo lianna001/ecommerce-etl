@@ -181,6 +181,7 @@ def append_to_csv(df: pd.DataFrame, path: str):
     return len(combined)
 
 
+
 # ── 실행 ───────────────────────────────────────────────
 if __name__ == "__main__":
 
@@ -189,11 +190,14 @@ if __name__ == "__main__":
     else:
         target_date = date.today()
 
+    # 환경변수로 OUTPUT_PATH 받기
+    output_path = os.environ.get("OUTPUT_PATH", OUTPUT_PATH)
+
     print(f"[generate] 날짜: {target_date}")
 
     df = generate_orders(target_date)
-    total_rows = append_to_csv(df, OUTPUT_PATH)
+    total_rows = append_to_csv(df, output_path)
 
     print(f"[generate] 오늘 주문 수:  {len(df)}건")
     print(f"[generate] 누적 총 주문: {total_rows}건")
-    print(f"[generate] 저장 경로:    {OUTPUT_PATH}")
+    print(f"[generate] 저장 경로:    {output_path}")
