@@ -2,3 +2,6 @@ openai
 beautifulsoup4
 requests
 lxml
+snowflake-connector-python
+streamlit
+python-dotenv
