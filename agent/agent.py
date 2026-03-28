@@ -1,9 +1,11 @@
 import json
 import os
 from datetime import date
+from dotenv import load_dotenv
 from openai import OpenAI
 from agent.tools import TOOL_SCHEMAS, TOOL_MAP
 
+load_dotenv()
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 SYSTEM_PROMPT = """You are an expert e-commerce data analyst with direct access to Snowflake query tools.
