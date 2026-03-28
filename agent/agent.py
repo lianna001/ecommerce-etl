@@ -2,7 +2,7 @@ import json
 import os
 from datetime import date
 from openai import OpenAI
-from .tools import TOOL_SCHEMAS, TOOL_MAP
+from agent.tools import TOOL_SCHEMAS, TOOL_MAP
 
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 

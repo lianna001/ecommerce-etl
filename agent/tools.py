@@ -1,4 +1,4 @@
-from .db import TABLE, execute_query
+from agent.db import TABLE, execute_query
 
 
 # ── Tool functions ──────────────────────────────────────────────────────────
