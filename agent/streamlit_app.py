@@ -5,9 +5,13 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import json
 import streamlit as st
 from dotenv import load_dotenv
-from agent.agent import run_agent, build_initial_messages
 
+# 로컬: .env 파일 / Streamlit Cloud: st.secrets → os.environ 동기화
 load_dotenv()
+for k, v in st.secrets.items():
+    os.environ.setdefault(k, str(v))
+
+from agent.agent import run_agent, build_initial_messages
 
 st.set_page_config(
     page_title="E-commerce AI Agent",
