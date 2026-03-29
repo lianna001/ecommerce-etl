@@ -19,21 +19,21 @@ st.set_page_config(
 with st.sidebar:
     st.title("📊 E-commerce\nData Analyst")
     st.divider()
-    st.markdown("**질문 예시**")
+    st.markdown("**Example Questions**")
     examples = [
-        "어제 매출 개요 알려줘",
-        "이번 주 채널별 ROAS 비교해줘",
-        "지난 2주간 매출이 왜 변했어?",
-        "카테고리별 매출 비중 보여줘",
-        "FREESHIP 프로모 효과 어때?",
-        "최근 14일 매출 트렌드 보여줘",
+        "Show me yesterday's sales overview",
+        "Compare ROAS by channel this week",
+        "Why did revenue change over the last 2 weeks?",
+        "Break down revenue by category",
+        "How effective is the FREESHIP promo?",
+        "Show me the revenue trend for the last 14 days",
     ]
     for ex in examples:
         if st.button(ex, use_container_width=True):
             st.session_state.pending_input = ex
 
     st.divider()
-    if st.button("대화 초기화", use_container_width=True):
+    if st.button("Clear conversation", use_container_width=True):
         st.session_state.messages = build_initial_messages()
         st.session_state.display_history = []
         st.rerun()
