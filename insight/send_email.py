@@ -40,14 +40,12 @@ def build_html_email(date_str: str, insight: str, news: str, anomaly: dict = Non
 You are an expert email designer.
 Create a clean, professional HTML email report with the following content.
 - White background, sans-serif font, mobile-friendly
-- Header with date and title "Daily Ecommerce Report"
+- DO NOT add any title or date header at the top — the content below already contains its own header
 - Sections divided by horizontal rules
 - Easy to read layout
 - If an Anomaly Alert section exists, highlight it with a colored background (red for HIGH, yellow for MEDIUM)
+- For the news section, render each article as: headline (source, date), one-line summary, clickable URL link
 Return only the HTML code, no extra text or markdown.
-
-[Date]
-{date_str}
 {anomaly_section}
 [Data Insights]
 {insight}

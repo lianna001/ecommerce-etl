@@ -24,9 +24,14 @@ def fetch_google_news(keyword: str, after: str, max_results: int = 4) -> list[di
             pub_date = parsedate_to_datetime(item.pubDate.text).strftime("%Y-%m-%d") if item.pubDate else "unknown"
         except Exception:
             pub_date = "unknown"
+        url = ""
+        if item.find("guid"):
+            url = item.find("guid").text
+        elif item.find("link"):
+            url = item.find("link").text or ""
         results.append({
             "title":  item.title.text,
-            "url":    item.link.next_sibling.strip() if item.link else "",
+            "url":    url,
             "date":   pub_date,
             "source": item.source.text if item.source else "",
         })
@@ -58,15 +63,22 @@ def fetch_and_summarize_news() -> str:
 
     prompt = f"""You are a sharp ecommerce business analyst. Today is {yesterday}.
 
-From the articles below, select exactly 3 that are most business-relevant.
+From the articles below, select EXACTLY 3. No more, no less.
 Strict criteria:
-- MUST contain specific numbers (%, $, units, growth rate, etc.)
-- Skip vague opinion pieces or articles without concrete data
-- Prefer articles about market moves, earnings, sales figures, or strategy shifts with measurable impact
+- MUST contain specific numbers (%, $, units, growth rate, etc.) — skip anything vague
+- Prefer earnings reports, sales figures, market share data, or strategy shifts with measurable impact
 
-For each selected article, output EXACTLY this format (no extra text):
+Output EXACTLY this format, nothing else:
 1. [YYYY-MM-DD] Headline (Source)
-   Summary: One sentence with the key number/metric front and center.
+   Summary: One sentence — lead with the key number.
+   URL: <url>
+
+2. [YYYY-MM-DD] Headline (Source)
+   Summary: One sentence — lead with the key number.
+   URL: <url>
+
+3. [YYYY-MM-DD] Headline (Source)
+   Summary: One sentence — lead with the key number.
    URL: <url>
 
 Articles:
