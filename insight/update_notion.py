@@ -42,51 +42,55 @@ def text_to_blocks(text: str) -> list:
     return blocks
 
 
-def update_notion_page(date_str: str, insight: str, news: str):
-    page_id = NOTION_PAGE_ID
+def _heading2(text: str) -> dict:
+    return {"object": "block", "type": "heading_2", "heading_2": {"rich_text": [{"type": "text", "text": {"content": text}}]}}
 
-    # 기존 내용 삭제
+def _divider() -> dict:
+    return {"object": "block", "type": "divider", "divider": {}}
+
+
+def update_notion_page(date_str: str, insight: str, news: str, anomaly: dict = None, forecast: dict = None):
+    page_id = NOTION_PAGE_ID
     clear_page_content(page_id)
 
-    # 새 블록 구성
     blocks = []
 
-    # 날짜 헤더
-    blocks.append({
-        "object": "block",
-        "type": "heading_1",
-        "heading_1": {
-            "rich_text": [{"type": "text", "text": {"content": f"Daily Ecommerce Report — {date_str}"}}]
-        }
-    })
+    # 헤더
+    blocks.append({"object": "block", "type": "heading_1", "heading_1": {
+        "rich_text": [{"type": "text", "text": {"content": f"Daily Ecommerce Report — {date_str}"}}]
+    }})
+    blocks.append(_divider())
 
-    # 구분선
-    blocks.append({"object": "block", "type": "divider", "divider": {}})
+    # 이상 감지 섹션 (감지된 경우만)
+    if anomaly and anomaly.get("is_anomaly"):
+        emoji = "🔴" if anomaly["severity"] == "HIGH" else "🟡"
+        blocks.append(_heading2(f"{emoji} Anomaly Alert"))
+        anomaly_lines = [
+            f"Severity: {anomaly['severity']}",
+            f"Today's Revenue: ${anomaly['today_revenue']:,.2f} ({anomaly['change_pct']:+.1f}% vs 7d avg)",
+            "Top Channel Movers:",
+        ] + [f"  • {m['channel']}: {m['change_pct']:+.1f}%" for m in anomaly.get("top_movers", [])]
+        blocks.extend(text_to_blocks("\n".join(anomaly_lines)))
+        blocks.append(_divider())
 
-    # 인사이트 섹션
-    blocks.append({
-        "object": "block",
-        "type": "heading_2",
-        "heading_2": {
-            "rich_text": [{"type": "text", "text": {"content": "📊 Data Insights"}}]
-        }
-    })
+    # 데이터 인사이트
+    blocks.append(_heading2("📊 Data Insights"))
     blocks.extend(text_to_blocks(insight))
+    blocks.append(_divider())
 
-    # 구분선
-    blocks.append({"object": "block", "type": "divider", "divider": {}})
+    # 7일 예측 섹션
+    if forecast and forecast.get("forecast"):
+        blocks.append(_heading2("📈 7-Day Revenue Forecast"))
+        forecast_lines = [f"Trend: {forecast['trend'].upper()} | 28d avg: ${forecast['avg_28d']:,.0f}"] + [
+            f"{f['day']} {f['date']}: ${f['predicted_revenue']:,.0f}" for f in forecast["forecast"]
+        ]
+        blocks.extend(text_to_blocks("\n".join(forecast_lines)))
+        blocks.append(_divider())
 
-    # 뉴스 섹션
-    blocks.append({
-        "object": "block",
-        "type": "heading_2",
-        "heading_2": {
-            "rich_text": [{"type": "text", "text": {"content": "📰 Ecommerce News"}}]
-        }
-    })
+    # 뉴스
+    blocks.append(_heading2("📰 Ecommerce News"))
     blocks.extend(text_to_blocks(news))
 
-    # 페이지에 블록 추가
     url = f"https://api.notion.com/v1/blocks/{page_id}/children"
     resp = requests.patch(url, headers=HEADERS, json={"children": blocks})
 

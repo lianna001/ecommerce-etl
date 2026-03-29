@@ -1,3 +1,6 @@
+import sys
+sys.path.append("/opt/airflow/ecommerce-etl")
+
 from airflow import DAG
 from airflow.providers.standard.operators.bash import BashOperator
 from airflow.providers.standard.operators.python import PythonOperator
@@ -5,6 +8,8 @@ from airflow.providers.snowflake.hooks.snowflake import SnowflakeHook
 from datetime import datetime
 import pandas as pd
 import pytz
+
+from insight.check_data_quality import check_data_quality
 
 
 def load_to_snowflake(**kwargs):
@@ -43,4 +48,9 @@ with DAG(
         python_callable=load_to_snowflake,
     )
 
-    generate_data >> load_data
+    quality_check = PythonOperator(
+        task_id="check_data_quality",
+        python_callable=lambda **kwargs: check_data_quality(kwargs["ds"]),
+    )
+
+    generate_data >> load_data >> quality_check
