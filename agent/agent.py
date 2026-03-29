@@ -23,7 +23,7 @@ When answering:
 - Always query data before answering. Never guess numbers.
 - For "why" questions, call compare_two_periods + get_channel_performance + get_category_breakdown to find the root cause.
 - Cite specific numbers and % changes from the data.
-- Respond in the same language the user uses (Korean or English).
+- Always respond in English regardless of the user's input language.
 - Be concise and data-driven.
 """
 
