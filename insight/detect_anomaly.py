@@ -40,8 +40,8 @@ def detect_anomaly(date_str: str) -> dict:
     channels = hook.get_records(f"""
         SELECT
             ad_channel,
-            SUM(CASE WHEN order_date = '{date_str}' THEN amount ELSE 0 END) AS today_rev,
-            AVG(CASE WHEN order_date != '{date_str}' THEN daily_rev END)     AS avg_rev
+            SUM(CASE WHEN order_date = '{date_str}' THEN daily_rev ELSE 0 END) AS today_rev,
+            AVG(CASE WHEN order_date != '{date_str}' THEN daily_rev END)        AS avg_rev
         FROM (
             SELECT order_date, ad_channel, SUM(amount) AS daily_rev
             FROM {TABLE}
@@ -49,7 +49,7 @@ def detect_anomaly(date_str: str) -> dict:
             GROUP BY order_date, ad_channel
         )
         GROUP BY ad_channel
-        ORDER BY ABS(SUM(CASE WHEN order_date = '{date_str}' THEN amount ELSE 0 END)
+        ORDER BY ABS(SUM(CASE WHEN order_date = '{date_str}' THEN daily_rev ELSE 0 END)
                    - AVG(CASE WHEN order_date != '{date_str}' THEN daily_rev END)) DESC
     """)
 
