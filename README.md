@@ -1,43 +1,24 @@
-# E-Commerce ETL Pipeline & Ads/Promotion Impact Analysis
+# E-Commerce ETL Pipeline & AI-Powered Analytics
 
 ## Business Question
 > Which ad channels and promotional offers drive the most revenue — and how does that vary by product category?
 
----
-
-## Project Highlights
-- **End-to-end ETL pipeline** — custom Python data generation with realistic e-commerce patterns, Airflow-orchestrated daily loads into Snowflake
-- **Interactive [Tableau Dashboard](https://public.tableau.com/views/ecommerce_dashboard_17739708179770/Dashboard12?:language=en&:display_count=n&:origin=viz_share_link)** — tracks ad vs. organic sales, week-over-week(WoW) trends, and category-level performance
+**[📊 Tableau Dashboard](https://public.tableau.com/views/ecommerce_dashboard_17739708179770/Dashboard12?:language=en&:display_count=n&:origin=viz_share_link)** | **[🤖 AI Agent (Streamlit)](https://ecommerce-etl-agent.streamlit.app)** | **[📁 Notion Portfolio](https://www.notion.so/E-Commerce-Data-Engineer-Analyst-Project-33208d1af1618082a085e37f9c9980a0)**
 
 ---
 
-## Project Overview
+## Project Goals
 
-### Extract & Transform
-- Generates daily e-commerce order data (orders, users, products, ad spend) using Python
-- Applies realistic patterns: weekend spikes, monthly seasonality, weekly category growth trends, and end-of-month promotion boosts
-- Ad channel distribution reflects real-world mix (Meta-heavy paid, meaningful organic share)
-- Data is cleaned at generation time with standardized formats and reproducible random seeds
-- Historical data backfilled from 2026-03-01 using `backfill.py`
+### Goal 1 — End-to-End ETL Pipeline & Visualization
+Synthetic e-commerce data generated daily with realistic seasonality patterns, loaded into Snowflake via Airflow, and visualized in Tableau with WoW and WTD metrics.
 
-### Load
-- Daily data loaded into Snowflake (`ecommerce_orders` table) via Airflow DAG running in Docker
-- Same-date records are deleted before each load to prevent duplicates, ensuring backfilled data stays clean on reruns
-- Pipeline runs automatically on `@daily` schedule
+### Goal 2 — AI-Automated Daily Insight Pipeline
+Airflow DAG running daily at 9AM that fetches Snowflake KPIs, generates a GPT-4o-mini business insight report, detects weekly revenue anomalies (triggers alert email if WoW change exceeds ±25%), scrapes industry news, and delivers everything as an HTML email.
 
-### Visualize
-- Snowflake connected to Tableau via Custom SQL for week-to-date(WTD) WoW calculations to capture more accurate in-progress weekly trends, with remaining aggregations handled automatically
-- Dashboard answers:
-  - How much of total revenue comes from paid ads vs. organic?
-  - Which ad channels perform best?
-  - Which promotions (FREESHIP vs. DISCOUNT10) drive more sales?
-  - How are sales trending week-over-week, overall and by category?
-- LLM integrated for data insights interpretation (working in progress as of 3/25)
-
-### AI Agent
-- Daily e-commerce news & data insights auto updates via email/Notion (working in progress as of 3/25)
+### Goal 3 — AI Agent Integration within Tableau
+GPT-4o-powered chatbot with 7 pre-built Snowflake query tools. Uses OpenAI function calling to autonomously select and chain tools based on user questions — deployed on Streamlit and embedded inside the Tableau dashboard.
 
 ---
 
 ## Tech Stack
-`Python` `SQL` `Apache Airflow` `Snowflake` `Tableau` `Docker` `GitHub` `OpenAI` `API` `Notion`
+`Python` `SQL` `Apache Airflow` `Snowflake` `Tableau` `Docker` `OpenAI API` `Streamlit` `GitHub`
