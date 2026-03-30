@@ -4,11 +4,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from openai import OpenAI
 
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+def _get_client():
+    return OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
-GMAIL_USER     = os.environ["GMAIL_USER"]
-GMAIL_PASSWORD = os.environ["GMAIL_APP_PASSWORD"]
-TO_EMAIL       = os.environ.get("REPORT_TO_EMAIL", GMAIL_USER)
+def _gmail_user():     return os.environ["GMAIL_USER"]
+def _gmail_password(): return os.environ["GMAIL_APP_PASSWORD"]
+def _to_email():       return os.environ.get("REPORT_TO_EMAIL", _gmail_user())
 
 
 def _format_anomaly(anomaly: dict) -> str:
@@ -46,7 +47,7 @@ Return only the HTML code, no extra text or markdown.
 {news}
 """
 
-    response = client.chat.completions.create(
+    response = _get_client().chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3
@@ -60,12 +61,12 @@ def send_daily_report(date_str: str, insight: str, news: str, anomaly: dict = No
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = f"[Daily Report] {date_str} Ecommerce Insights"
-    msg["From"]    = GMAIL_USER
-    msg["To"]      = TO_EMAIL
+    msg["From"]    = _gmail_user()
+    msg["To"]      = _to_email()
     msg.attach(MIMEText(html_body, "html"))
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(GMAIL_USER, GMAIL_PASSWORD)
-        server.sendmail(GMAIL_USER, TO_EMAIL, msg.as_string())
+        server.login(_gmail_user(), _gmail_password())
+        server.sendmail(_gmail_user(), _to_email(), msg.as_string())
 
-    print(f"[{date_str}] Email sent to {TO_EMAIL}")
+    print(f"[{date_str}] Email sent to {_to_email()}")

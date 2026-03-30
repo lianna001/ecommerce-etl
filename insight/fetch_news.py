@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from openai import OpenAI
 from datetime import date, timedelta
 
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+def _client(): return OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 KEYWORDS = ["ecommerce", "online retail", "Coupang", "amazon", "D2C"]
 
@@ -43,7 +43,7 @@ Format:
 - [Headline] : One-line key takeaway
 """
 
-    response = client.chat.completions.create(
+    response = _client().chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.5

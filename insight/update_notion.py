@@ -1,14 +1,12 @@
 import os
 import requests
 
-NOTION_TOKEN      = os.environ["NOTION_TOKEN"]
-NOTION_PARENT_ID  = os.environ["NOTION_PARENT_PAGE_ID"]
-
-HEADERS = {
-    "Authorization": f"Bearer {NOTION_TOKEN}",
-    "Content-Type": "application/json",
-    "Notion-Version": "2022-06-28",
-}
+def _get_headers():
+    return {
+        "Authorization": f"Bearer {os.environ['NOTION_TOKEN']}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+    }
 
 
 def _paragraph(text: str) -> dict:
@@ -81,7 +79,7 @@ def update_notion_page(date_str: str, insight: str, news: str, anomaly: dict = N
 
     # 새 서브페이지 생성
     payload = {
-        "parent": {"page_id": NOTION_PARENT_ID},
+        "parent": {"page_id": os.environ["NOTION_PARENT_PAGE_ID"]},
         "properties": {
             "title": {
                 "title": [{"type": "text", "text": {"content": f"Daily Report — {date_str}"}}]
@@ -90,7 +88,7 @@ def update_notion_page(date_str: str, insight: str, news: str, anomaly: dict = N
         "children": blocks,
     }
 
-    resp = requests.post("https://api.notion.com/v1/pages", headers=HEADERS, json=payload)
+    resp = requests.post("https://api.notion.com/v1/pages", headers=_get_headers(), json=payload)
 
     if resp.status_code == 200:
         print(f"[{date_str}] Notion page created successfully")

@@ -2,7 +2,7 @@ import os
 import json
 from openai import OpenAI
 
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+def _client(): return OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 
 def generate_insight(summary: dict) -> str:
@@ -35,7 +35,7 @@ Write in the following format:
 Be sharp and data-driven. Always back up observations with numbers.
 """
 
-    response = client.chat.completions.create(
+    response = _client().chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7
