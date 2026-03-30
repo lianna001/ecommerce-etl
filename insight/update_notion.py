@@ -49,7 +49,7 @@ def _divider() -> dict:
     return {"object": "block", "type": "divider", "divider": {}}
 
 
-def update_notion_page(date_str: str, insight: str, news: str, anomaly: dict = None, forecast: dict = None):
+def update_notion_page(date_str: str, insight: str, news: str, anomaly: dict = None):
     page_id = NOTION_PAGE_ID
     clear_page_content(page_id)
 
@@ -77,15 +77,6 @@ def update_notion_page(date_str: str, insight: str, news: str, anomaly: dict = N
     blocks.append(_heading2("📊 Data Insights"))
     blocks.extend(text_to_blocks(insight))
     blocks.append(_divider())
-
-    # 7일 예측 섹션
-    if forecast and forecast.get("forecast"):
-        blocks.append(_heading2("📈 7-Day Revenue Forecast"))
-        forecast_lines = [f"Trend: {forecast['trend'].upper()} | 28d avg: ${forecast['avg_28d']:,.0f}"] + [
-            f"{f['day']} {f['date']}: ${f['predicted_revenue']:,.0f}" for f in forecast["forecast"]
-        ]
-        blocks.extend(text_to_blocks("\n".join(forecast_lines)))
-        blocks.append(_divider())
 
     # 뉴스
     blocks.append(_heading2("📰 Ecommerce News"))
