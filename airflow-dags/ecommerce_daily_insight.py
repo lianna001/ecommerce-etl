@@ -10,7 +10,6 @@ from insight.generate_insight import generate_insight
 from insight.detect_anomaly import detect_anomaly
 from insight.fetch_news import fetch_and_summarize_news
 from insight.send_email import send_daily_report
-from insight.update_notion import update_notion_page
 
 
 def run_fetch_summary(**kwargs):
@@ -43,15 +42,6 @@ def run_send_email(**kwargs):
     send_daily_report(date_str=date_str, insight=insight, news=news, anomaly=anomaly)
 
 
-def run_update_notion(**kwargs):
-    ti       = kwargs["ti"]
-    date_str = kwargs["ds"]
-    insight  = ti.xcom_pull(key="insight", task_ids="generate_insight")
-    anomaly  = ti.xcom_pull(key="anomaly", task_ids="detect_anomaly")
-    news     = ti.xcom_pull(key="news",    task_ids="fetch_news")
-    update_notion_page(date_str=date_str, insight=insight, news=news, anomaly=anomaly)
-
-
 with DAG(
     dag_id="ecommerce_daily_insight",
     start_date=datetime(2026, 3, 1),
@@ -65,6 +55,5 @@ with DAG(
     t3 = PythonOperator(task_id="detect_anomaly",          python_callable=run_detect_anomaly)
     t4 = PythonOperator(task_id="fetch_news",              python_callable=run_fetch_news)
     t5 = PythonOperator(task_id="send_email",              python_callable=run_send_email)
-    t6 = PythonOperator(task_id="update_notion",           python_callable=run_update_notion)
 
-    t1 >> [t2, t3, t4] >> t5 >> t6
+    t1 >> [t2, t3, t4] >> t5
