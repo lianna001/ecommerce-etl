@@ -1,6 +1,7 @@
 import sys
 sys.path.append("/opt/airflow/ecommerce-etl")
 
+import pendulum
 from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 from datetime import datetime
@@ -46,6 +47,7 @@ with DAG(
     dag_id="ecommerce_daily_insight",
     start_date=datetime(2026, 3, 1),
     schedule="0 9 * * *",
+    timezone=pendulum.timezone("America/Los_Angeles"),
     catchup=False,
     default_args={"owner": "lianna", "retries": 1},
 ) as dag:
