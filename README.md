@@ -3,7 +3,7 @@
 ## Business Question
 > Which ad channels and promotional offers drive the most revenue — and how does that vary by product category?
 
-**[📊 Tableau Dashboard](https://public.tableau.com/views/ecommerce_dashboard_17739708179770/Dashboard12?:language=en&:display_count=n&:origin=viz_share_link)** | **[🤖 AI Agent (Streamlit)](https://ecommerce-etl-agent.streamlit.app)** | **[📁 Notion Portfolio](https://www.notion.so/E-Commerce-Data-Engineer-Analyst-Project-33208d1af1618082a085e37f9c9980a0)**
+**[📊 Tableau Dashboard](https://public.tableau.com/views/ecommerce_dashboard_17739708179770/Dashboard12?:language=en&:display_count=n&:origin=viz_share_link)** | **[🤖 AI Agent (Streamlit)]([https://ecommerce-etl-agent.streamlit.app](https://lianna-ecommerce-etl.streamlit.app/))** | **[📁 Notion Portfolio](https://www.notion.so/E-Commerce-Data-Engineer-Analyst-Project-33208d1af1618082a085e37f9c9980a0)**
 
 ---
 
